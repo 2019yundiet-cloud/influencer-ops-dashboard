@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>인스타그램 모집 대시보드</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --line: #d9e1ea;
+      --text: #17202a;
+      --muted: #5b6876;
+      --accent: #12766d;
+      --accent-strong: #0e5e57;
+      --warn: #945c00;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-width: 320px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .title {
+      min-width: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      word-break: break-all;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button,
+    a.button {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      text-decoration: none;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    a.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    a.primary:hover {
+      background: var(--accent-strong);
+    }
+
+    main {
+      position: relative;
+      min-height: 0;
+      background: #eef3f8;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      display: block;
+    }
+
+    .fallback {
+      position: absolute;
+      inset: 16px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .fallback-inner {
+      max-width: 560px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(22, 33, 44, 0.12);
+      pointer-events: auto;
+    }
+
+    .fallback h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .fallback p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .note {
+      color: var(--warn);
+      font-size: 13px;
+    }
+
+    @media (max-width: 760px) {
+      header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      a.button,
+      button {
+        flex: 1 1 140px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1>인스타그램 모집 대시보드</h1>
+      <div class="meta" id="targetText"></div>
+    </div>
+    <div class="actions">
+      <a class="button primary" id="openButton" target="_blank" rel="noopener">새 창으로 열기</a>
+      <button id="reloadButton" type="button">다시 불러오기</button>
+    </div>
+  </header>
+
+  <main>
+    <iframe id="dashboardFrame" title="인스타그램 모집 대시보드"></iframe>
+    <section class="fallback" id="fallback">
+      <div class="fallback-inner">
+        <h2>대시보드를 불러오는 중입니다</h2>
+        <p>화면이 비어 있으면 새 창으로 열기를 눌러 확인하세요. 임시 터널이 바뀐 경우 이 고정 페이지의 대상 URL을 갱신해야 합니다.</p>
+        <p class="note" id="fallbackTarget"></p>
+        <a class="button primary" id="fallbackOpen" target="_blank" rel="noopener">대시보드 새 창 열기</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const DASHBOARD_URL = 'https://blogs-pharmacology-mounted-writes.trycloudflare.com';
+    const targetText = document.getElementById('targetText');
+    const frame = document.getElementById('dashboardFrame');
+    const openButton = document.getElementById('openButton');
+    const reloadButton = document.getElementById('reloadButton');
+    const fallback = document.getElementById('fallback');
+    const fallbackTarget = document.getElementById('fallbackTarget');
+    const fallbackOpen = document.getElementById('fallbackOpen');
+
+    function setTarget() {
+      targetText.textContent = DASHBOARD_URL;
+      fallbackTarget.textContent = DASHBOARD_URL;
+      openButton.href = DASHBOARD_URL;
+      fallbackOpen.href = DASHBOARD_URL;
+      frame.src = DASHBOARD_URL;
+    }
+
+    reloadButton.addEventListener('click', () => {
+      fallback.style.display = 'none';
+      frame.src = `${DASHBOARD_URL}?reload=${Date.now()}`;
+    });
+
+    window.setTimeout(() => {
+      fallback.style.display = 'flex';
+    }, 6000);
+
+    frame.addEventListener('load', () => {
+      fallback.style.display = 'none';
+    });
+
+    setTarget();
+  </script>
+</body>
+</html>
