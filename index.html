@@ -171,6 +171,68 @@
       }
     }
   </style>
+  <style id="mobile-ux-patch-20260611">
+    /* Mobile UX patch 2026-06-11 — scoped to <=480px, zero desktop impact */
+    @media (max-width: 480px) {
+      /* baseline: prevent iOS focus auto-zoom */
+      input,
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+
+      /* baseline: Korean-friendly wrapping */
+      body {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+      }
+
+      /* critical: 44px touch targets (was 36px) */
+      button,
+      a.button {
+        min-height: 44px !important;
+        padding: 8px 12px !important;
+        font-size: 15px !important;
+      }
+
+      /* major: narrow-viewport header layout */
+      header {
+        gap: 12px !important;
+        padding: 12px 12px !important;
+      }
+
+      .actions {
+        gap: 6px !important;
+      }
+
+      a.button,
+      button {
+        flex: 1 1 120px !important;
+      }
+
+      /* major: fallback modal spacing */
+      .fallback {
+        inset: 12px !important;
+      }
+
+      .fallback-inner {
+        padding: 16px !important;
+      }
+
+      /* minor: long tunnel-URL text wrapping */
+      .meta,
+      .note {
+        font-size: 12px !important;
+        overflow-wrap: break-word;
+        word-break: break-all;
+      }
+
+      /* baseline: smooth touch scrolling */
+      main {
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -197,7 +259,7 @@
   </main>
 
   <script>
-    const DASHBOARD_URL = 'https://blogs-pharmacology-mounted-writes.trycloudflare.com';
+    const DASHBOARD_URL = 'https://plug-louisville-performer-viewpicture.trycloudflare.com';
     const targetText = document.getElementById('targetText');
     const frame = document.getElementById('dashboardFrame');
     const openButton = document.getElementById('openButton');
@@ -205,25 +267,44 @@
     const fallback = document.getElementById('fallback');
     const fallbackTarget = document.getElementById('fallbackTarget');
     const fallbackOpen = document.getElementById('fallbackOpen');
+    let frameLoaded = false;
+    let fallbackTimer = null;
+
+    function armFallbackTimer() {
+      if (fallbackTimer) {
+        window.clearTimeout(fallbackTimer);
+      }
+      fallbackTimer = window.setTimeout(() => {
+        if (!frameLoaded) {
+          fallback.style.display = 'flex';
+        }
+      }, 6000);
+    }
 
     function setTarget() {
       targetText.textContent = DASHBOARD_URL;
       fallbackTarget.textContent = DASHBOARD_URL;
       openButton.href = DASHBOARD_URL;
       fallbackOpen.href = DASHBOARD_URL;
+      frameLoaded = false;
+      fallback.style.display = 'none';
       frame.src = DASHBOARD_URL;
+      armFallbackTimer();
     }
 
     reloadButton.addEventListener('click', () => {
+      frameLoaded = false;
       fallback.style.display = 'none';
       frame.src = `${DASHBOARD_URL}?reload=${Date.now()}`;
+      armFallbackTimer();
     });
 
-    window.setTimeout(() => {
-      fallback.style.display = 'flex';
-    }, 6000);
-
     frame.addEventListener('load', () => {
+      frameLoaded = true;
+      if (fallbackTimer) {
+        window.clearTimeout(fallbackTimer);
+        fallbackTimer = null;
+      }
       fallback.style.display = 'none';
     });
 

@@ -5,8 +5,7 @@ This GitHub Pages site is a stable entry point for the Yundiet Instagram influen
 Current embedded dashboard target:
 
 ```text
-https://blogs-pharmacology-mounted-writes.trycloudflare.com
+https://plug-louisville-performer-viewpicture.trycloudflare.com
 ```
 
 The Python dashboard still runs the live API. This Pages site does not store database secrets, candidate data, or DM content. If the temporary Cloudflare tunnel changes, update `DASHBOARD_URL` in `index.html` and redeploy.
-
